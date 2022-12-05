@@ -32,7 +32,12 @@ const LoginScreen = ({navigation}) => {
     }
 
     const loginHandle = () => {
-        Alert.alert("Uyarı",data.password)
+        if(!data.email || !data.password){
+            Alert.alert("Uyarı","Lütfen email ve parola alınını boş bırakmayınız.")
+        }else{
+            
+        }
+        
     }
 
     return (

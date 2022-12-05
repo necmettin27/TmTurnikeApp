@@ -11,9 +11,9 @@ function StackNavigation(){
     return (
         <Stack.Navigator screenOptions={{
             headerShown:false
-        }}>
-            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        }}> 
             <Stack.Screen name="SplashScreen" component={SplashScreen} /> 
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         </Stack.Navigator>
     );  
