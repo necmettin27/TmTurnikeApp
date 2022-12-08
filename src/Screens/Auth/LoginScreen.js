@@ -1,14 +1,24 @@
 import React,{useState} from "react";
-import { View,Text, StatusBar,StyleSheet, Dimensions,TouchableOpacity, TextInput, Platform, Alert } from "react-native";
+import { View,Text, StatusBar,StyleSheet, Dimensions,TouchableOpacity, TextInput, Platform, Alert,ActivityIndicator} from "react-native";
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from "react-native-animatable";
 import {User,Lock, Eye, EyeOff} from "../../components/icons";
+import Spinner from 'react-native-loading-spinner-overlay';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from 'react-redux'
+import { setSignIn } from '../../redux/slices/authSlice';
+import axios from "axios";
+import {BASE_URL} from "../../config";
+
 
 const LoginScreen = ({navigation}) => {
+    const dispatch = useDispatch();
+
     const [data,setData] = useState({
         email : '',
         password : '',
-        secureTextEntry:true
+        secureTextEntry:true,
+        loading:false,
     });
 
     const updateSecureTextEntry = () => {
@@ -32,9 +42,48 @@ const LoginScreen = ({navigation}) => {
     }
 
     const loginHandle = () => {
+        setData({
+            ...data,
+            loading:true
+        });
         if(!data.email || !data.password){
-            Alert.alert("Uyarı","Lütfen email ve parola alınını boş bırakmayınız.")
+            Alert.alert("Uyarı","Lütfen email ve parola alınını boş bırakmayınız.");
+            setData({
+                ...data,
+                loading:false
+            });
         }else{
+            axios.post(`${BASE_URL}/login`,{
+                email:data.email,
+                password:data.password,
+                type:'tmturnike'
+            })
+            .then(function (response) { 
+                const rsp = response.data;
+                if(rsp.status_code == 200){
+                    const user = {
+                        isLoggedIn: true,
+                        email: rsp.user.email,
+                        userName: rsp.user.name,
+                        token: rsp.token
+                     }; 
+                     AsyncStorage.setItem('userInfo',JSON.stringify(user));
+                     dispatch(setSignIn(user));
+                }else {
+                    Alert.alert("Lütfen email ve parolanı doğru giriniz.");
+                }
+                setData({
+                    ...data,
+                    loading:false
+                });
+            })
+            .catch(function (error) {
+                Alert.alert("Uyarı",JSON.stringify(error.message));
+                setData({
+                    ...data,
+                    loading:false
+                });
+            });
             
         }
         
@@ -43,6 +92,10 @@ const LoginScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor="#009387" barStyle="light-content"/> 
+            <Spinner
+                visible={data.loading}
+                textContent={'Loading...'}
+                />
             <View style={styles.header}>
                 <Animatable.Image
                     source={require('../../assets/logo.png')}

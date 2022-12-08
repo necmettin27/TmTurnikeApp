@@ -7,7 +7,7 @@ import LoginScreen from "../Screens/Auth/LoginScreen";
 
 const Stack = createNativeStackNavigator();
 
-function StackNavigation(){
+function AuthNavigation(){
     return (
         <Stack.Navigator screenOptions={{
             headerShown:false
@@ -18,4 +18,4 @@ function StackNavigation(){
         </Stack.Navigator>
     );  
 }
-export default StackNavigation;
+export default AuthNavigation;
