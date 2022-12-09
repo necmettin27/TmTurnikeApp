@@ -59,12 +59,12 @@ const LoginScreen = ({navigation}) => {
                 type:'tmturnike'
             })
             .then(function (response) { 
-                const rsp = response.data;
-                if(rsp.status_code == 200){
+                const rsp = response.data; 
+                if(rsp.status_code == 200){ 
                     const user = {
                         isLoggedIn: true,
-                        email: rsp.user.email,
-                        userName: rsp.user.name,
+                        email: rsp.email,
+                        userName: rsp.name,
                         token: rsp.token
                      }; 
                      AsyncStorage.setItem('userInfo',JSON.stringify(user));
@@ -143,7 +143,7 @@ const LoginScreen = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
                 
-                <View style={styles.button}>
+                <View style={styles.button} className="mt-5">
                     <TouchableOpacity style={{width:'100%'}} onPress={()=>loginHandle()}>
                         <LinearGradient style={styles.signIn} colors={['#08d4d4','#01ab9d']}>
                             <Text style={[styles.textSigin,{color:"#fff"}]}>
